@@ -1,47 +1,38 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="cemetery-app">
+    <HeaderSection/>
+    <WelcomeSection />
+    <ServicePlanningSection />
+    <CompanyInfoSection />
+    <FooterSection />
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<script>
+import HeaderSection from './components/HeaderSection.vue';
+import WelcomeSection from './components/WelcomeSection.vue';
+import ServicePlanningSection from './components/ServicePlanningSection.vue';
+import CompanyInfoSection from './components/CompanyInfoSection.vue';
+import FooterSection from './components/FooterSection.vue';
+
+export default {
+  name: 'App',
+  components: {
+    HeaderSection,
+    WelcomeSection,
+    ServicePlanningSection,
+    CompanyInfoSection,
+    FooterSection
+  }
 }
+</script>
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+<style>
+.cemetery-app {
+  font-family: Arial, sans-serif;
+  color: #333;
+  max-width: 1920px;
+  margin: 0 auto;
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
 }
 </style>
