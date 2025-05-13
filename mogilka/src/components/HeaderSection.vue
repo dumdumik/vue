@@ -35,7 +35,8 @@
           <a href="tel:+79526832797" class="phone">+7 952 683 2797</a>
 
           <!-- Кнопка Войти -->
-          <button class="login-btn">Войти</button>
+          <button class="login-btn" @click="showLoginModal = true">Войти</button>
+
         </div>
       </div>
 
@@ -53,53 +54,20 @@
         <a href="#" class="nav-link">Карты</a>
       </nav>
     </div>
+    <LoginModal :isOpen="showLoginModal" @close="showLoginModal = false" />
   </header>
+
 </template>
 
-<script>
-export default {
-  name: 'HeaderSection'
-}
+<script setup>
+import { ref } from 'vue';
+import LoginModal from './LoginModal.vue';
+const showLoginModal = ref(false);
 </script>
 
 <style scoped>
 /* Базовые стили */
-.login-btn {
-  color: #ffffff;
-  background: transparent;
-  border: 1px solid #6BFF3E;
-  border-radius: 20px;
-  padding: clamp(6px, 1vw, 10px) clamp(20px, 4vw, 49px);
-  font-size: clamp(14px, 1.5vw, 18px);
-  cursor: pointer;
-  transition: all 0.3s;
-  white-space: nowrap;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-  font-family: 'Unbounded', sans-serif;
-}
 
-.login-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  background-color: #6BFF3E;
-  transition: width 0.3s ease;
-  z-index: -1;
-}
-
-.login-btn:hover {
-  color: #383737;
-  border-color: transparent;
-}
-
-.login-btn:hover::before {
-  width: 100%;
-}
 .header {
   background-color: #383737;
   font-family: 'Unbounded', sans-serif;
@@ -131,7 +99,9 @@ export default {
   flex: 1 1 auto;
   min-width: min-content;
 }
-
+.right-group{
+  justify-content: flex-end;
+}
 /* Социальные иконки */
 .social-icons {
   display: flex;
@@ -178,10 +148,31 @@ export default {
   cursor: pointer;
   transition: all 0.3s;
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  font-family: 'Unbounded', sans-serif;
+}
+
+.login-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: #6BFF3E;
+  transition: width 0.3s ease;
+  z-index: -1;
 }
 
 .login-btn:hover {
-  background: rgba(107, 255, 62, 0.1);
+  color: #383737;
+  border-color: transparent;
+}
+
+.login-btn:hover::before {
+  width: 100%;
 }
 
 /* Разделительная полоса */
