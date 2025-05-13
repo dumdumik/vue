@@ -22,9 +22,7 @@ header{
   height: 750px;
   background-image: url("../components/icons/background.png");
   background-color: #383737;
-  box-shadow:
-      inset 0 1px 14px -6px #6BFF3E,  /* Верхняя тень */
-      inset 0 -1px 14px -6px #6BFF3E; /* Нижняя тень */
+
 }
 :root {
   --green: #6BFF3E;
