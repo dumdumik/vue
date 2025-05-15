@@ -5,27 +5,22 @@
     <ServicePlanningSection />
     <CompanyInfoSection />
     <FooterSection />
+    <ChatButton />
   </div>
+
 </template>
 
-<script>
+<script setup>
 import HeaderSection from './components/HeaderSection.vue';
 import WelcomeSection from './components/WelcomeSection.vue';
 import ServicePlanningSection from './components/ServicePlanningSection.vue';
 import CompanyInfoSection from './components/CompanyInfoSection.vue';
 import FooterSection from './components/FooterSection.vue';
+import ChatButton from "@/components/ChatButton.vue";
 
-export default {
-  name: 'App',
-  components: {
-    HeaderSection,
-    WelcomeSection,
-    ServicePlanningSection,
-    CompanyInfoSection,
-    FooterSection
-  }
-}
+
 </script>
+
 
 <style>
 .cemetery-app {

@@ -20,7 +20,7 @@ export default {
 <style scoped>
 header{
   height: 750px;
-  background-image: url("../components/icons/background.png");
+  background-image: url("../components/icons/fon.png");
   background-color: #383737;
 
 }

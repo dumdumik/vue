@@ -1,5 +1,6 @@
 <template>
-  <div class="modal-overlay" v-if="isOpen" @click.self="closeModal">
+  <!-- Модальное окно входа -->
+  <div class="modal-overlay" v-if="isOpen && !showRegister" @click.self="closeModal">
     <div class="modal">
       <h2 class="modal-title">ВХОД</h2>
 
@@ -43,10 +44,73 @@
 
       <div class="register-group">
         <span class="no-account">Нет аккаунта?</span>
-        <a href="#" class="register-link">Зарегистрироваться</a>
+        <a href="#" class="register-link" @click.prevent="showRegister = true">Зарегистрироваться</a>
       </div>
 
       <div class="error-message general-error" v-if="errors.general">{{ errors.general }}</div>
+
+      <button class="modal-close" @click="closeModal">×</button>
+    </div>
+  </div>
+
+  <!-- Модальное окно регистрации -->
+  <div class="modal-overlay" v-if="isOpen && showRegister" @click.self="closeModal">
+    <div class="modal">
+      <h2 class="modal-title">РЕГИСТРАЦИЯ</h2>
+
+      <div class="input-group">
+        <input
+            type="email"
+            class="modal-input"
+            placeholder="Электронная почта"
+            v-model="registerEmail"
+            :class="{ 'input-error': registerErrors.email }"
+            @input="clearRegisterError('email')"
+        >
+        <span class="error-message" v-if="registerErrors.email">{{ registerErrors.email }}</span>
+
+        <input
+            type="text"
+            class="modal-input"
+            placeholder="Логин"
+            v-model="registerLogin"
+            :class="{ 'input-error': registerErrors.login }"
+            @input="clearRegisterError('login')"
+        >
+        <span class="error-message" v-if="registerErrors.login">{{ registerErrors.login }}</span>
+
+        <input
+            type="password"
+            class="modal-input"
+            placeholder="Пароль"
+            v-model="registerPassword"
+            :class="{ 'input-error': registerErrors.password }"
+            @input="clearRegisterError('password')"
+        >
+        <span class="error-message" v-if="registerErrors.password">{{ registerErrors.password }}</span>
+      </div>
+
+      <button class="modal-login-btn" @click="handleRegister">Зарегистрироваться</button>
+
+      <div class="remember-forgot">
+        <label class="checkbox-container">
+          <input
+              type="checkbox"
+              v-model="registerRememberMe"
+              @change="clearRegisterError('rememberMe')"
+          >
+          <span class="checkmark" :class="{ 'checkmark-error': registerErrors.rememberMe }"></span>
+          <span class="remember-text">Запомнить меня</span>
+        </label>
+        <span class="error-message" v-if="registerErrors.rememberMe">{{ registerErrors.rememberMe }}</span>
+      </div>
+
+      <div class="register-group">
+        <span class="no-account">Уже есть аккаунт?</span>
+        <a href="#" class="register-link" @click.prevent="showRegister = false">Войти</a>
+      </div>
+
+      <div class="error-message general-error" v-if="registerErrors.general">{{ registerErrors.general }}</div>
 
       <button class="modal-close" @click="closeModal">×</button>
     </div>
@@ -65,10 +129,25 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
+// Данные для входа
 const login = ref('');
 const password = ref('');
 const rememberMe = ref(false);
 const errors = ref({
+  login: '',
+  password: '',
+  rememberMe: '',
+  general: ''
+});
+
+// Данные для регистрации
+const showRegister = ref(false);
+const registerEmail = ref('');
+const registerLogin = ref('');
+const registerPassword = ref('');
+const registerRememberMe = ref(false);
+const registerErrors = ref({
+  email: '',
   login: '',
   password: '',
   rememberMe: '',
@@ -102,9 +181,54 @@ const validateForm = () => {
   return isValid;
 };
 
+const validateRegisterForm = () => {
+  let isValid = true;
+  registerErrors.value = {
+    email: '',
+    login: '',
+    password: '',
+    rememberMe: '',
+    general: ''
+  };
+
+  if (!registerEmail.value.trim()) {
+    registerErrors.value.email = 'Пожалуйста, введите email';
+    isValid = false;
+  } else if (!/^\S+@\S+\.\S+$/.test(registerEmail.value)) {
+    registerErrors.value.email = 'Пожалуйста, введите корректный email';
+    isValid = false;
+  }
+
+  if (!registerLogin.value.trim()) {
+    registerErrors.value.login = 'Пожалуйста, введите логин';
+    isValid = false;
+  }
+
+  if (!registerPassword.value.trim()) {
+    registerErrors.value.password = 'Пожалуйста, введите пароль';
+    isValid = false;
+  } else if (registerPassword.value.length < 6) {
+    registerErrors.value.password = 'Пароль должен содержать минимум 6 символов';
+    isValid = false;
+  }
+
+  if (!registerRememberMe.value) {
+    registerErrors.value.rememberMe = 'Необходимо согласие';
+    isValid = false;
+  }
+
+  return isValid;
+};
+
 const clearError = (field) => {
   if (errors.value[field]) {
     errors.value[field] = '';
+  }
+};
+
+const clearRegisterError = (field) => {
+  if (registerErrors.value[field]) {
+    registerErrors.value[field] = '';
   }
 };
 
@@ -115,12 +239,19 @@ const closeModal = () => {
     rememberMe: '',
     general: ''
   };
+  registerErrors.value = {
+    email: '',
+    login: '',
+    password: '',
+    rememberMe: '',
+    general: ''
+  };
+  showRegister.value = false;
   emit('close');
 };
 
 const handleLogin = () => {
   if (validateForm()) {
-    // Здесь можно добавить логику входа
     console.log('Login attempt:', {
       login: login.value,
       password: password.value,
@@ -132,10 +263,23 @@ const handleLogin = () => {
   }
 };
 
-
+const handleRegister = () => {
+  if (validateRegisterForm()) {
+    console.log('Register attempt:', {
+      email: registerEmail.value,
+      login: registerLogin.value,
+      password: registerPassword.value,
+      rememberMe: registerRememberMe.value
+    });
+    closeModal();
+  } else {
+    registerErrors.value.general = 'Пожалуйста, заполните все обязательные поля';
+  }
+};
 </script>
 
 <style scoped>
+/* Стили остаются такими же, как в оригинальном коде */
 @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600&display=swap');
 .input-error {
   border: 1px solid #ff4d4f !important;
@@ -148,8 +292,6 @@ const handleLogin = () => {
 .error-message {
   color: #ff4d4f;
   font-size: 14px;
-
-
   width: 100%;
   max-width: 520px;
   text-align: left;
@@ -158,7 +300,6 @@ const handleLogin = () => {
 
 .general-error {
   text-align: center;
-
 }
 
 .modal-overlay {
@@ -237,7 +378,7 @@ const handleLogin = () => {
   position: relative;
   overflow: hidden;
   z-index: 1;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .modal-login-btn::before {
@@ -275,6 +416,7 @@ const handleLogin = () => {
   cursor: pointer;
   position: relative;
   user-select: none;
+
 }
 
 .checkbox-container input {
