@@ -8,7 +8,8 @@ use App\Actions\User\RegisterAction;
 
 class UserController extends Controller
 {
-    public function register(RegisterRequest $request){
+    public function register(Request $request){
+        dd($request);
         return RegisterAction::execute($request);
     }
 

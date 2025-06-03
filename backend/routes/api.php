@@ -1,10 +1,12 @@
 <?php
 
-use app\Actions\User\RegisterController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Request;
 
-Route::post('/register', RegisterController::class);
-Route::post('/login', LoginController::class);
-Route::post('/logout', LogoutController::class)->middleware('auth:sanctum');
+Route::post('/register', [UserController::class, 'register']);
+Route::post('/login', [UserController::class, 'login']);
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+route::get('/fix', function(){
+    return response()->json(['fix' => 'get massage']);
+});
